@@ -17,4 +17,21 @@ install:
     - go env 
 
 build_script:
-  - go test -v -cover ./...
+    - go build -o test-golang-appveyor.exe -i .
+    - go test -v -cover ./...
+
+artifacts:
+    - path: test-golang-appveyor.exe
+      name: binary
+
+deploy:
+    release: test-golang-appveyor-${appveyor_build_version}
+    description: "A release of our test application."
+    provider: GitHub
+    auth_token:
+        secure: a+oeiBPthTLzInkdEf+PJfsSNeRspesEOfWMR2SAFOFCBykR6JUs5uuSJn0Odq8t
+    artifact: binary
+    draft: true
+    prerelease: true
+    on:
+        branch: master
